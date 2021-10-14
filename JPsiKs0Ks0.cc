@@ -185,9 +185,9 @@ JPsiKs0Ks0::JPsiKs0Ks0(const edm::ParameterSet& iConfig):
   B_pv2ip(0), B_pv2iperr(0), B_pv2ips(0), B_pv2lzip(0), B_pv2lziperr(0), B_pv2lzips(0),
 
   B_l3d_pv2(0),  B_l3dE_pv2(0),
-  B_iso(0), B_mum_iso(0), B_mup_iso(0), B_pi1_iso(0),B_pi2_iso(0),
+  B_iso(0), B_mum_iso(0), B_mup_iso(0), B_pi1_iso(0),B_pi2_iso(0),B_pi3_iso(0),B_pi4_iso(0),
   
-  istruemum(0), istruemup(0), istruekp(0), istruekm(0), istruebs(0),
+  istruemum(0), istruemup(0), istruekp(0), istruekm(0), istruekp1(0), istruekm1(0), istruebs(0),
   bunchXingMC(0), numInteractionsMC(0), trueNumInteractionsMC(0),
   run(0), event(0),
   lumiblock(0)
@@ -254,6 +254,8 @@ void JPsiKs0Ks0::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   gen_ks_p4.SetPtEtaPhiM(0.,0.,0.,0.);
   gen_pion1_p4.SetPtEtaPhiM(0.,0.,0.,0.);
   gen_pion2_p4.SetPtEtaPhiM(0.,0.,0.,0.);
+  gen_pion3_p4.SetPtEtaPhiM(0.,0.,0.,0.);
+  gen_pion4_p4.SetPtEtaPhiM(0.,0.,0.,0.);
   gen_jpsi_p4.SetPtEtaPhiM(0.,0.,0.,0.);
   gen_muon1_p4.SetPtEtaPhiM(0.,0.,0.,0.);
   gen_muon2_p4.SetPtEtaPhiM(0.,0.,0.,0.);
@@ -325,22 +327,22 @@ void JPsiKs0Ks0::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 	      }
 	    }
 	  }
-/*	for (size_t lk=0; lk<packed->size(); lk++) {
+	for (size_t lk=0; lk<packed->size(); lk++) {
 	    const reco::Candidate * dauInPrunedColl = (*packed)[lk].mother(1);
 	    int stable_id = (*packed)[lk].pdgId();
 	    if (dauInPrunedColl != nullptr && isAncestor(gdau,dauInPrunedColl)) {
 	      if(stable_id == 211) {foundit++;
-		gen_pion1_p4.SetPtEtaPhiM((*packed)[lk].pt(),(*packed)[lk].eta(),(*packed)[lk].phi(),(*packed)[lk].mass());
+		gen_pion3_p4.SetPtEtaPhiM((*packed)[lk].pt(),(*packed)[lk].eta(),(*packed)[lk].phi(),(*packed)[lk].mass());
 	      }
 	      if(stable_id == -211){ foundit++;
-		gen_pion2_p4.SetPtEtaPhiM((*packed)[lk].pt(),(*packed)[lk].eta(),(*packed)[lk].phi(),(*packed)[lk].mass());
+		gen_pion4_p4.SetPtEtaPhiM((*packed)[lk].pt(),(*packed)[lk].eta(),(*packed)[lk].phi(),(*packed)[lk].mass());
 	      }
 	    }
-	  }*/
+	  }
 
         } // for (size_t k                                                                                                                                                          
       }   // if (abs(dau->pdgId())==531 )                                                                                                                                           
-      if (foundit>=7) break;
+      if (foundit>=9) break;
     } // for i                                                                                                                                                                      
     if (foundit!=7) {
       gen_b_p4.SetPtEtaPhiM(0.,0.,0.,0.);
@@ -585,7 +587,9 @@ void JPsiKs0Ks0::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 	  if(psi_vFit_noMC->currentState().mass()<2.9 || psi_vFit_noMC->currentState().mass()>3.3) continue;
 	  
 	  //  ***************  added two Ks0 Ks01 loop
-	  std::cout<<" code is working till here 1 "<<std::endl;     
+	  std::cout<<" code is working till here 1 "<<std::endl;    
+           if ( theV0PtrHandle->size()>2 && thePATMuonHandle->size()>=2 )
+            { 
 	      for ( vector<VertexCompositePtrCandidate>::const_iterator iVee = theV0PtrHandle->begin();   iVee != theV0PtrHandle->end(); ++iVee )
 		{
 
@@ -756,11 +760,11 @@ std::cout<<" code is working till here 33 "<<std::endl;
 		   RefCountedKinematicTree vertexFitTree = kcvFitter.fit(vFitMCParticles, j_psi_c);
 		   if (!vertexFitTree->isValid()) {
 		     std::cout << "caught an exception in the B vertex fit with MC" << std::endl;
-		     continue;
+		    continue;
 		   }
-//		std::cout<<" code is working till here 4 "<<std::endl;
+		std::cout<<" code is working till here 4 "<<std::endl;
 		   vertexFitTree->movePointerToTheTop();		     
-		    std::cout<<" code is working till here 4 "<<std::endl;
+		    std::cout<<" code is working till here 41 "<<std::endl;
 		   RefCountedKinematicParticle bCandMC = vertexFitTree->currentParticle();
 		   RefCountedKinematicVertex bDecayVertexMC = vertexFitTree->currentDecayVertex();
 		   if (!bDecayVertexMC->vertexIsValid()){
@@ -1216,12 +1220,12 @@ std::cout<<" code is working till here 6 "<<std::endl;
 		   pionParticles.clear();
 		   muonParticles.clear();
 		   vFitMCParticles.clear();
+		  }//V0 
 		   
-		   
-		}
-	     }
-	}
-    }    
+		}//Ks01
+	     }//Ks0
+	}//mu2
+    }//mu1    
 //}
 //}
    
@@ -1313,9 +1317,10 @@ std::cout<<" code is working till here 6 "<<std::endl;
    B_pv2ip->clear(); B_pv2iperr->clear(); B_pv2ips->clear(); B_pv2lzip->clear(); B_pv2lziperr->clear(); B_pv2lzips->clear();
    
    B_l3d_pv2->clear();  B_l3dE_pv2->clear();
-   B_iso->clear(); B_mum_iso->clear(); B_mup_iso->clear(); B_pi1_iso->clear();B_pi2_iso->clear();
+   B_iso->clear(); B_mum_iso->clear(); B_mup_iso->clear(); B_pi1_iso->clear();B_pi2_iso->clear();B_pi3_iso->clear();B_pi4_iso->clear();
+
    
-   istruemum->clear(); istruemup->clear(); istruekp->clear(); istruekm->clear(); istruebs->clear();
+   istruemum->clear(); istruemup->clear(); istruekp->clear(); istruekm->clear(); istruekp1->clear(); istruekm1->clear(); istruebs->clear();
    bunchXingMC->clear(); numInteractionsMC->clear(); trueNumInteractionsMC->clear();
 
    
@@ -1433,11 +1438,34 @@ JPsiKs0Ks0::saveTruthMatch(const edm::Event& iEvent){
       istruekm->push_back(false);
     }
 
+    //---------------------------------
+    //    // truth match with pion+ track   Ks01
+    //        //---------------------------------   
+
+deltaEtaPhi = calEtaPhiDistance(gen_pion3_p4.Px(), gen_pion3_p4.Py(), gen_pion3_p4.Pz(),
+                                    B_Ks01_px1->at(i), B_Ks01_py1->at(i), B_Ks01_pz1->at(i));
+    if (deltaEtaPhi < TruthMatchKaonMaxR_){
+      istruekp1->push_back(true);
+    } else {
+      istruekp1->push_back(false);
+    }
+
+
+	//---------------------------------                                                                                                                           
+    // truth match with pion- track                                                                                                     Ks01                            
+        //---------------------------------       
+    deltaEtaPhi = calEtaPhiDistance(gen_pion4_p4.Px(), gen_pion4_p4.Py(), gen_pion4_p4.Pz(),
+                                    B_Ks01_px2->at(i), B_Ks01_py2->at(i), B_Ks01_pz2->at(i));
+    if (deltaEtaPhi < TruthMatchKaonMaxR_){
+      istruekm1->push_back(true);
+    } else {
+      istruekm1->push_back(false);
+    }
 
     //---------------------------------------
     // truth match with Bs or Bs bar 
     //---------------------------------------                                                                                                
-    if ( istruemum->back() && istruemup->back() && istruekm->back() && istruekp->back() ) {
+    if ( istruemum->back() && istruemup->back() && istruekm->back() && istruekp->back() && istruekm1->back() && istruekp1->back()) {
       istruebs->push_back(true);
     } else {
       istruebs->push_back(false);
@@ -1800,7 +1828,25 @@ void JPsiKs0Ks0::SaveIso(const RefCountedKinematicTree& vertexFitTree, const Mag
 	    double deltaR_tmp = deltaR(iTrack->eta(), iTrack->phi(), pion2TT.track().eta(),  pion2TT.track().phi());
 	    if(deltaR_tmp<0.5) sumtrkppt += iTrack->pt();
 	  }
-	}  
+	}
+
+	ClosestApp.calculate(TrackIsoTT.initialFreeState(), pion3TT.initialFreeState());
+    if (ClosestApp.status() != false)
+      { 
+        if ( ClosestApp.distance() < 0.1 ) {
+          double deltaR_tmp = deltaR(iTrack->eta(), iTrack->phi(), pion3TT.track().eta(),  pion3TT.track().phi());
+            if(deltaR_tmp<0.5) sumtrkmpt += iTrack->pt();
+        }
+        }
+    ClosestApp.calculate(TrackIsoTT.initialFreeState(), pion4TT.initialFreeState());
+      if (ClosestApp.status() != false)
+        {
+          if ( ClosestApp.distance() < 0.1 ) {
+            double deltaR_tmp = deltaR(iTrack->eta(), iTrack->phi(), pion4TT.track().eta(),  pion4TT.track().phi());
+            if(deltaR_tmp<0.5) sumtrkppt += iTrack->pt();
+          }
+        }
+  
       
       VertexDistance3D distance3D;      
       const GlobalPoint BVP = GlobalPoint( vertex->position() );
@@ -1832,11 +1878,17 @@ void JPsiKs0Ks0::SaveIso(const RefCountedKinematicTree& vertexFitTree, const Mag
 
   float trkpIso_ = pion1TT.track().pt()/(sumtrkppt +pion1TT.track().pt() );
   float trkmIso_ = pion2TT.track().pt()/(sumtrkmpt +pion2TT.track().pt() );
+  float trk1pIso_ = pion3TT.track().pt()/(sumtrkppt +pion3TT.track().pt() );
+  float trk1mIso_ = pion4TT.track().pt()/(sumtrkmpt +pion4TT.track().pt() );
+
   B_iso->push_back(BIso_); 
   B_mum_iso->push_back(mumIso_); 
   B_mup_iso->push_back(mupIso_); 
   B_pi1_iso->push_back(trkpIso_);
   B_pi2_iso->push_back(trkmIso_);
+  B_pi3_iso->push_back(trk1pIso_);
+  B_pi4_iso->push_back(trk1mIso_);
+
   
 }
 // ------------ method called once each job just before starting event loop  ------------
@@ -2081,6 +2133,9 @@ JPsiKs0Ks0::beginJob()
   tree_->Branch("B_mup_iso",&B_mup_iso);
   tree_->Branch("B_pi1_iso",&B_pi1_iso);
   tree_->Branch("B_pi2_iso",&B_pi2_iso);
+  tree_->Branch("B_pi3_iso",&B_pi3_iso);
+  tree_->Branch("B_pi4_iso",&B_pi4_iso);
+
   
   
   //gen information
@@ -2089,6 +2144,8 @@ JPsiKs0Ks0::beginJob()
     tree_->Branch("gen_ks_p4",   "TLorentzVector",  &gen_ks_p4);
     tree_->Branch("gen_pion1_p4",  "TLorentzVector",  &gen_pion1_p4);
     tree_->Branch("gen_pion2_p4",  "TLorentzVector",  &gen_pion2_p4);
+    tree_->Branch("gen_pion3_p4",  "TLorentzVector",  &gen_pion3_p4);
+    tree_->Branch("gen_pion4_p4",  "TLorentzVector",  &gen_pion4_p4);//added for ks01
     tree_->Branch("gen_jpsi_p4",   "TLorentzVector",  &gen_jpsi_p4);
     tree_->Branch("gen_muon1_p4",  "TLorentzVector",  &gen_muon1_p4);
     tree_->Branch("gen_muon2_p4",  "TLorentzVector",  &gen_muon2_p4);
@@ -2100,6 +2157,9 @@ JPsiKs0Ks0::beginJob()
   tree_->Branch("istruemup",  &istruemup );
   tree_->Branch("istruekp",   &istruekp  );
   tree_->Branch("istruekm",   &istruekm  );
+  tree_->Branch("istruekp1",   &istruekp1  );
+  tree_->Branch("istruekm1",   &istruekm1  );
+
   tree_->Branch("istruebs",   &istruebs  );
   
   tree_->Branch("bunchXingMC",&bunchXingMC);

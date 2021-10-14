@@ -26,7 +26,7 @@
 #include "RecoVertex/KinematicFitPrimitives/interface/TransientTrackKinematicParticle.h"
 #include "RecoVertex/AdaptiveVertexFit/interface/AdaptiveVertexFitter.h"
 #include "RecoVertex/KinematicFitPrimitives/interface/KinematicParticleFactoryFromTransientTrack.h"
-
+#include "RecoVertex/KinematicFitPrimitives/interface/MultiTrackKinematicConstraint.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackFromFTSFactory.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrack.h"
@@ -268,14 +268,14 @@ private:
   std::vector<float>       *B_pvip , *B_pviperr, *B_pvips, *B_pvlzip, *B_pvlziperr,*B_pvlzips;
   std::vector<float>       *B_pv2ip , *B_pv2iperr, *B_pv2ips, *B_pv2lzip, *B_pv2lziperr,*B_pv2lzips;
   std::vector<float>       *B_l3d_pv2,  *B_l3dE_pv2;
-  std::vector<float>       *B_iso, *B_mum_iso, *B_mup_iso, *B_pi1_iso, *B_pi2_iso;
+  std::vector<float>       *B_iso, *B_mum_iso, *B_mup_iso, *B_pi1_iso, *B_pi2_iso, *B_pi3_iso, *B_pi4_iso;
 
-  std::vector<bool>        *istruemum, *istruemup, *istruekp, *istruekm, *istruebs;
+  std::vector<bool>        *istruemum, *istruemup, *istruekp, *istruekm,  *istruekp1, *istruekm1, *istruebs;
   std::vector<float>       *bunchXingMC, *numInteractionsMC, *trueNumInteractionsMC;  
   int  run, event;
   int  lumiblock;
 
-  TLorentzVector gen_b_p4,gen_ks_p4,gen_pion1_p4,gen_pion2_p4,gen_jpsi_p4,gen_muon1_p4,gen_muon2_p4;
+  TLorentzVector gen_b_p4,gen_ks_p4,gen_pion1_p4,gen_pion2_p4,gen_pion3_p4,gen_pion4_p4,gen_jpsi_p4,gen_muon1_p4,gen_muon2_p4;
   TVector3       gen_b_vtx,gen_jpsi_vtx;
   float          gen_b_ct;
 
