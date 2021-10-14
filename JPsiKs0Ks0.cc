@@ -1218,9 +1218,10 @@ std::cout<<" code is working till here 6 "<<std::endl;
 
 		   /////////////////////////////////////////////////
 		   pionParticles.clear();
+ 		   pion1Particles.clear();
 		   muonParticles.clear();
 		   vFitMCParticles.clear();
-		  }//V0 
+		   }//V0
 		   
 		}//Ks01
 	     }//Ks0
