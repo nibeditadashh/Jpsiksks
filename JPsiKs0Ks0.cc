@@ -588,7 +588,7 @@ void JPsiKs0Ks0::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 	  
 	  //  ***************  added two Ks0 Ks01 loop
 	  std::cout<<" code is working till here 1 "<<std::endl;    
-           if ( theV0PtrHandle->size()>2 && thePATMuonHandle->size()>=2 )
+           if ( theV0PtrHandle->size()>=2 && thePATMuonHandle->size()>=2 )
             { 
 	      for ( vector<VertexCompositePtrCandidate>::const_iterator iVee = theV0PtrHandle->begin();   iVee != theV0PtrHandle->end(); ++iVee )
 		{
@@ -652,7 +652,7 @@ std::cout<<" code is working till here 2 "<<std::endl;
 		     pionParticles.push_back(pFactory.particle(pion1TT,pion_mass,chi,ndf,pion_sigma));
 		     pionParticles.push_back(pFactory.particle(pion2TT,pion_mass,chi,ndf,pion_sigma));
 //added for Ks01
-pion1Particles.push_back(pFactory.particle(pion3TT,pion_mass,chi,ndf,pion_sigma));
+		     pion1Particles.push_back(pFactory.particle(pion3TT,pion_mass,chi,ndf,pion_sigma));
 		     pion1Particles.push_back(pFactory.particle(pion4TT,pion_mass,chi,ndf,pion_sigma));
 		   }
 		   catch(...) {
